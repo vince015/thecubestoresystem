@@ -1,0 +1,65 @@
+{% extends "thecubestore/base.html" %}
+
+{% load staticfiles %}
+{% block pagetitle %}Welcome{% endblock %}
+
+{% block main %}
+<!-- login-box -->
+<div class="login-box">
+    <!-- login-log -->
+    <div class="login-logo">
+        <img src="{% static "images/logo.png" %}" alt="The Cube Store" />
+    </div>
+    <!-- end login-logo -->
+
+    <!-- login-box-body -->
+    <div class="login-box-body">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li
+                    {% if message.tags %}
+                        {% if message.tags == 'error' %}
+                            class='text-red'
+                        {% endif %}
+                    {% endif %}>
+                    {{ message }}
+                </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% if not messages %}
+            <p class="login-box-msg">Sign in to start your session</p>
+        {% endif %}
+
+        <!-- login form -->
+        <form action=".?next={{ redirect_to }}" method="post">
+            {% csrf_token %}
+            <div class="form-group has-feedback">
+                <input type="text" name="username" class="form-control" placeholder="Username">
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" name="password" class="form-control" placeholder="Password">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="checkbox icheck">
+                    <!-- filler -->
+                    </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-xs-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                </div>
+            </div>
+        </form>
+        <!-- end login form -->
+
+        <a href="register.html" class="text-center">Register a new membership</a>
+    </div>
+    <!-- end login-box-body -->
+</div>
+<!-- end login-box -->
+{% endblock %}

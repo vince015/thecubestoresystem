@@ -1,0 +1,311 @@
+{% extends "thecubestore/base.html" %}
+
+{% load staticfiles %}
+{% block pagetitle %}Merchants{% endblock %}
+
+{% block main %}
+<div class="wrapper">
+
+    <header class="main-header">
+        <!-- Logo -->
+        <a href="{% url 'home' %}" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini">t<b>CS</b></span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg">the<b>CubeStore</b></span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-fixed-top">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="">{{ user.username }}</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="{% static "images/logo_mini.png" %}" alt="The Cube Store" class="img-circle">
+                </div>
+                <div class="pull-left info">
+                    <p>{{ user.first_name }} {{ user.last_name }}</p>
+                </div>
+            </div>
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="header">MAIN NAVIGATION</li>
+                <li>
+                    <a href="#">
+                        <i class="fa fa-bell"></i>
+                        <span>Anouncements</span>
+                        <span class="pull-right-container">
+                            <span class="label label-primary pull-right">4</span>
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'home' %}">
+                        <i class="fa fa-dashboard"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="active treeview">
+                    <a href="{% url 'merchant_list' %}">
+                        <i class="fa fa-user"></i>
+                        <span>Merchants</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="{% url 'merchant_list' %}"><i class="fa fa-circle-o"></i>List</a></li>
+                        <li><a href="{% url 'user_add' %}"><i class="fa fa-circle-o"></i>Add</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+    <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content-header">&nbsp;</section>
+
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                Merchants
+                <small>ADD</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Merchants</li>
+            </ol>
+        </section>      
+
+        <!-- error messages -->
+        <section class="content">
+            {% if messages %}
+            <div class="row">
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li
+                        {% if message.tags %}
+                            {% if message.tags == 'error' %}
+                                class='text-red'
+                            {% endif %}
+                            {% if message.tags == 'info' %}
+                                class='text-green'
+                            {% endif %}
+                        {% endif %}>
+                        {{ message }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="row">
+            <form action="{% url 'lease_add' user_id=user_id %}" method="post">
+            {% csrf_token %}
+                <div class="col-md-12">
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ username }}'s Lease</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="form-group col-xs-6">
+                                <label for="durationInput">Duration</label>&nbsp;&nbsp;<small>(Months)</small>
+                                <input type="number"
+                                       name="duration"
+                                       id="durationInput"
+                                       min="1"
+                                       {% if data.duration %}
+                                           value="{{ data.duration }}"
+                                       {% else %}
+                                           value="6"
+                                       {% endif %}
+                                       class="form-control"
+                                       placeholder="Duration of Lease">
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <label for="promoInput">Promo</label>&nbsp;&nbsp;<small>(Months)</small>
+                                <input type="number"
+                                       name="promo"
+                                       id="promoInput"
+                                       min="0"
+                                       {% if data.promo %}
+                                           value="{{ data.promo }}"
+                                       {% else %}
+                                           value="0"
+                                       {% endif %}
+                                       class="form-control"
+                                       placeholder="Number of months with promo">
+                            </div>
+                            <div class="form-group">
+                                <label for="startDatePicker">Start Date:</label>
+                                <div class="input-group date" data-provide="datepicker">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text"
+                                           name="start_date"
+                                           id="startDatePicker"
+                                           value="{{ data.start_date }}"
+                                           class="form-control pull-right">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="endDatePicker">End Date:</label>
+                                <div class="input-group date" data-provide="datepicker">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text"
+                                           name="end_date"
+                                           id="endDatePicker"
+                                           value="{{ data.end_date }}"
+                                           class="form-control pull-right">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="nextDueDatePicker">Next Due Date:</label>
+                                <div class="input-group date" data-provide="datepicker">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text"
+                                           name="next_due_date"
+                                           id="nextDueDatePicker"
+                                           value="{{ data.next_due_date }}"
+                                           class="form-control pull-right">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Commission</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="form-group col-xs-4">
+                                <label for="vatInput">VAT</label>&nbsp;&nbsp;<small>(%)</small>
+                                <input type="number"
+                                       name="vat"
+                                       id="vatInput"
+                                       min="0"
+                                       {% if data.vat %}
+                                           value="{{ data.vat }}"
+                                       {% else %}
+                                           value="3"
+                                       {% endif %}
+                                       class="form-control"
+                                       placeholder="VAT percentage">
+                            </div>
+                            <div class="form-group col-xs-4">
+                                <label for="salesInput">Sales</label>&nbsp;&nbsp;<small>(%)</small>
+                                <input type="number"
+                                       name="sales"
+                                       id="salesInput"
+                                       min="0"
+                                       {% if data.sales %}
+                                           value="{{ data.sales }}"
+                                       {% else %}
+                                           value="3"
+                                       {% endif %}
+                                       class="form-control"
+                                       placeholder="Sales percentage">
+                            </div>
+                        </div>
+                        <!--<div class="box-header with-border">
+                            <h3 class="box-title">Payment</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label>Mode</label>
+                                <select class="form-control" name="mode">
+                                    {% if data.mode == 'ca' %}
+                                        <option value="ca" selected="true">Cash</option>
+                                    {% else %}
+                                        <option value="ca">Cash</option>
+                                    {% endif %}
+                                    {% if data.mode == 'ch' %}
+                                        <option value="ch" selected="true">Check</option>
+                                    {% else %}
+                                        <option value="ch">Check</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="bankInput">Bank</label>
+                                <input type="text"
+                                       name="bank"
+                                       id="bankInput"
+                                       value="{{ data.bank }}"
+                                       maxlength="128"
+                                       class="form-control"
+                                       placeholder="Name of bank">
+                            </div>
+                            <div class="form-group">
+                                <label for="accountInput">Account Number</label>
+                                <input type="text"
+                                       name="bank_account"
+                                       id="accountInput"
+                                       value="{{ data.bank_account }}"
+                                       maxlength="128"
+                                       class="form-control"
+                                       placeholder="Bank account number">
+                            </div>
+                        </div>-->
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+            <!-- end Small boxes -->
+        </section>
+        <!-- end content -->
+    </div>
+    <!-- end Content Wrapper -->
+
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 0.1.0
+        </div>
+            <strong>Copyright &copy; 2017.</strong> <p>Template based on:<a href="https://adminlte.io">Almsaeed Studio</a>.</p> All rights
+        reserved.
+    </footer>
+</div>
+{% endblock %}
+
+{% block scrips %}
+<!-- AdminLTE App -->
+<script src="{% static "dist/js/adminlte.min.js" %}"></script>
+<script type="text/javascript">
+    $(function () {
+
+        //Date picker
+        $('.datepicker').datepicker({
+            autoclose: true,
+            dateFormat: 'yy-mm-dd'
+        });
+
+    })
+</script>
+{% endblock %}
