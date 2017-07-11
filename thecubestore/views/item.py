@@ -29,13 +29,14 @@ def add(request, cube_id):
             sales = float(request.POST.get('sales'))
             item = Item.objects.create(cube=cube,
                                        name=request.POST.get('name'),
+                                       price=price,
                                        quantity=quantity,
                                        vat=vat,
                                        commission=sales)
 
             messages.info(request, 'Successfully added item.')
 
-            return redirect('/thecubestore/cube/view/{0}'.format(cube_id))
+            return redirect('/thecubestore/cube/view/{0}#cube-item'.format(cube_id))
 
     except ObjectDoesNotExist:
         return HttpResponse(status=404)
@@ -82,15 +83,13 @@ def edit(request, item_id):
 
             context_dict['data'] = request.POST
 
-            initial = int(request.POST.get('initial'))
-            current = int(request.POST.get('current'))
+            quantity = int(request.POST.get('quantity'))
             price = float(request.POST.get('price'))
             vat = float(request.POST.get('vat'))
             sales = float(request.POST.get('sales'))
 
             item.name = request.POST.get('name')
-            item.initial = initial
-            item.current = current
+            item.qunatity = quantity
             item.price = price
             item.vat = vat
             item.commission = sales

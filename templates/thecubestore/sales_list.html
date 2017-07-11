@@ -138,7 +138,7 @@
                                     {% for sale in sales %}
                                         <tr>
                                             <td>
-                                                <a href="{% url 'item_view' item_id=item.id %}">
+                                                <a href="{% url 'item_view' item_id=sale.item.id %}">
                                                     {{ sale.item.name }}
                                                 </a>
                                             </td>

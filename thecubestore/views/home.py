@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 from django.conf import settings
 
-from thecubestore.models import Item
+from thecubestore.models import Item, Sales, Profile, Cube
 
 # Constants
 BASE_URL = '/thecubestore/{0}/'
@@ -64,8 +64,21 @@ def dashboard(request):
 
     # Get user info
     if is_member(user, 'Staff'):
+
         items = Item.objects.all()
         context_dict['items'] = items
+
+        sales = Sales.objects.all()
+        context_dict['sales'] = sales
+
+        context_dict['merchants'] = list()
+        users = User.objects.filter(groups__name='Merchant')
+        for user in users:
+            profile = Profile.objects.get(user=user)
+            cubes = Cube.objects.filter(profile=profile)
+
+            context_dict['merchants'].append({'profile': profile,
+                                              'cubes': cubes})
 
         return render(request, 'thecubestore/staff.html', context_dict)
     else:

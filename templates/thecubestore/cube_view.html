@@ -131,23 +131,23 @@
                                 </li>
                                 <li class="list-group-item">
                                     <b>Duration</b>
-                                    <a class="pull-right">{{ lease.duration }} Months</a>
+                                    <a class="pull-right">{{ cube.duration }} Months</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b>Promo</b>
-                                    <a class="pull-right">{{ lease.promo }} Months</a>
+                                    <a class="pull-right">{{ cube.promo }} Months</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b>Start Date</b>
-                                    <a class="pull-right">{{ lease.start_date }}</a>
+                                    <a class="pull-right">{{ cube.start_date }}</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b>End Date</b>
-                                    <a class="pull-right">{{ lease.end_date }}</a>
+                                    <a class="pull-right">{{ cube.end_date }}</a>
                                 </li>
                                 <li class="list-group-item">
                                     <b>Next Due Date</b>
-                                    <a class="pull-right">{{ lease.next_due_date }}</a>
+                                    <a class="pull-right">{{ cube.next_due_date }}</a>
                                 </li>
                             </ul>
                         </div>
@@ -159,7 +159,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" id="cube-item">
                 <div class="col-md-12">
                     <div class="box">
                         <div class="box-header with-border">
@@ -173,7 +173,7 @@
                             <table id="item_table" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Name</th>
                                         <th>Stock</th>
                                         <th>Price</th>
                                         <th></th>

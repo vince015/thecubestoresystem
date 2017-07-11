@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime, timedelta
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -18,6 +18,18 @@ def compute_net(amount, vat, sales):
     sales_deduct = amount * (sales / 100)
     return amount - vat_deduct - sales_deduct
 
+def current_date():
+
+    try:
+        now = datetime.utcnow()
+        # Add 8hrs for PH time
+        pst = now + timedelta(hours=8)
+        formatted = datetime.strftime(pst, '%Y-%m-%d')
+        return formatted
+
+    except:
+        raise
+
 @login_required
 def add(request):
 
@@ -28,11 +40,16 @@ def add(request):
             item = Item.objects.get(id=request.POST.get('item'))
             
             quantity = int(request.POST.get('quantity'))
-            net = compute_net(item.price*quantity, item.vat, item.sales)
+            net = compute_net(item.price*quantity, item.vat, item.commission)
             sales = Sales.objects.create(item=item,
-                                         date=date.today,
+                                         date=current_date(),
                                          quantity=quantity,
                                          net=net)
+
+            item.quantity = item.quantity - quantity
+            item.save()
+
+            return redirect('/thecubestore')
 
     except ObjectDoesNotExist:
         return HttpResponse(status=404)
@@ -51,7 +68,7 @@ def list(request):
 
     try:
         context_dict = dict()
-        sales = Item.objects.all()
+        sales = Sales.objects.all()
         context_dict['sales'] = sales
 
     except Exception as ex:

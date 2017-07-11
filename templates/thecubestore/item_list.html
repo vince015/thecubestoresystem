@@ -127,7 +127,7 @@
                             <table id="item_table" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Name</th>
                                         <th>Quantity</th>
                                         <th>Price</th>
                                         <th>Cube</th>
@@ -138,7 +138,7 @@
                                         <tr>
                                             <td>
                                                 <a href="{% url 'item_view' item_id=item.id %}">
-                                                    {{ item.id }}
+                                                    {{ item.name }}
                                                 </a>
                                             </td>
                                             <td>

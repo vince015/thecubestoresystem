@@ -101,9 +101,9 @@ class Item(models.Model):
     quantity = models.PositiveSmallIntegerField(blank=False)
     price = models.DecimalField(max_digits=7,
                                 decimal_places=2)
-    # vat = models.DecimalField(default=0,
-    #                           max_digits=3,
-    #                           decimal_places=2)
+    vat = models.DecimalField(default=0,
+                              max_digits=3,
+                              decimal_places=2)
     commission = models.DecimalField(default=0,
                                      max_digits=3,
                                      decimal_places=2)
@@ -115,4 +115,5 @@ class Sales(models.Model):
                              blank=False)
     date = models.DateField(blank=False)
     quantity = models.PositiveSmallIntegerField(blank=False)
-    net = models.PositiveSmallIntegerField(blank=False)
+    net = models.DecimalField(max_digits=7,
+                              decimal_places=2)
