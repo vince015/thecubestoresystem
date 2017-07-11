@@ -72,25 +72,6 @@ class Payment(models.Model):
     account = models.CharField(max_length=128,
                                blank=False)
 
-class Lease(models.Model):
-
-    profile = models.OneToOneField(Profile,
-                                   on_delete=models.CASCADE,
-                                   blank=False,
-                                   null=True)
-    duration = models.PositiveSmallIntegerField(blank=False)
-    promo = models.PositiveSmallIntegerField(blank=False,
-                                             default=0)
-    vat = models.DecimalField(default=0,
-                              max_digits=3,
-                              decimal_places=2)
-    sales = models.DecimalField(default=0,
-                                max_digits=3,
-                                decimal_places=2)
-    start_date = models.DateField(blank=False)
-    end_date = models.DateField(blank=False)
-    next_due_date = models.DateField(null=True)
-
 class Item(models.Model):
 
     cube = models.ForeignKey('Cube',

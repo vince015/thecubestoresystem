@@ -3,293 +3,151 @@
 {% load staticfiles %}
 {% block pagetitle %}Dashboard{% endblock %}
 
-{% block main %}
-<div class="wrapper">
+{% block breadcrumb %}
+<h1>
+    Dashboard
+</h1>
+<ol class="breadcrumb">
+    <li><a href="{% url 'home' %}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+</ol>
+{% endblock %}
 
-    <header class="main-header">
-        <!-- Logo -->
-        <a href="{% url 'home' %}" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini">t<b>CS</b></span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">the<b>CubeStore</b></span>
-        </a>
-        <!-- Header Navbar: style can be found in header.less -->
-        <nav class="navbar navbar-static-top">
-            <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                <span class="sr-only">Toggle navigation</span>
-            </a>
-
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="">{{ user.username }}</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i></a>
-                    </li>
+{% block main %}      
+    <div class="row">
+        <!-- Left col -->
+        <section class="col-lg-7 connectedSortable">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#items" data-toggle="tab">Items</a></li>
+                    <li><a href="#sales" data-toggle="tab">Sales</a></li>
+                    <li><a href="#merchants" data-toggle="tab">Merchants</a></li>
                 </ul>
-            </div>
-        </nav>
-    </header>
-    <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
-            <!-- Sidebar user panel -->
-            <div class="user-panel">
-                <div class="pull-left image">
-                    <img src="{% static "images/logo_mini.png" %}" alt="The Cube Store" class="img-circle">
+                <div class="tab-content">
+                    <div class="active tab-pane" id="items">
+                        <table id="item_table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Stock</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                    <tr>
+                                        <form action="{% url 'sales_add' %}" method="post">
+                                        {% csrf_token %}
+                                        <td>
+                                            <a href="{% url 'item_view' item_id=item.id %}">
+                                                {{ item.name }}
+                                            </a>
+                                            <input type="hidden" name="item" value="{{ item.id }}">
+                                        </td>
+                                        <td>
+                                            {{ item.quantity }}
+                                        </td>
+                                        <td>
+                                            {{ item.price }}
+                                        </td>
+                                        <td>   
+                                            <input type="number"
+                                                   name="quantity"
+                                                   id="quantityInput"
+                                                   max="{{ item.quantity }}"
+                                                   min="1"
+                                                   value="1"
+                                                   required="true"
+                                                   class="form-control pull-right"
+                                                   placeholder="Quantity of item posited in cube">
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-info btn-flat pull-right">
+                                                <i class="fa fa-shopping-basket"></i>
+                                            </button>
+                                        </td>
+                                    </form>
+                                    </tr>
+                                {% endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane" id="sales">
+                        <table id="sales_table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Date</th>
+                                    <th>Quantity</th>
+                                    <th>Final Sales</th>
+                                    <th>Owner</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sale in sales %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'item_view' item_id=sale.item.id %}">
+                                                {{ sale.item.name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ sale.date }}
+                                        </td>
+                                        <td>
+                                            {{ sale.quantity }}
+                                        </td>
+                                        <td>
+                                            {{ sale.net }}
+                                        </td>
+                                        <td>
+                                            {{ sale.item.cube.profile.user.first_name }}
+                                            {{ sale.item.cube.profile.user.last_name }}
+                                        </td>
+                                    </tr>
+                                {% endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane" id="merchants">
+                        <table id="merchants_table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Contact Number</th>
+                                    <th>Cubes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for merchant in merchants %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'profile_view' user_id=merchant.profile.user.id %}">
+                                                {{ merchant.profile.user.first_name }}
+                                                {{ merchant.profile.user.last_name }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ merchant.profile.user.username }}
+                                        </td>
+                                        <td>
+                                            {{ merchant.profile.contact_number }}
+                                        </td>
+                                        <td>
+                                            {{ merchant.cubes|length }}
+                                        </td>
+                                    </tr>
+                                {% endfor%}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="pull-left info">
-                    <p>{{ user.first_name }} {{ user.last_name }}</p>
-                </div>
             </div>
-            <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu" data-widget="tree">
-                <li class="header">MAIN NAVIGATION</li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-bell"></i>
-                        <span>Anouncements</span>
-                        <span class="pull-right-container">
-                            <span class="label label-primary pull-right">4</span>
-                        </span>
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="{% url 'home' %}">
-                        <i class="fa fa-dashboard"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="treeview">
-                    <a href="{% url 'merchant_list' %}">
-                        <i class="fa fa-user"></i>
-                        <span>Merchants</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="#"><i class="fa fa-circle-o"></i>List</a></li>
-                        <li><a href="{% url 'user_add' %}"><i class="fa fa-circle-o"></i>Add</a></li>
-                    </ul>
-                </li>
-            </ul>
         </section>
-    <!-- /.sidebar -->
-    </aside>
-
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-          <h1>
-            Dashboard
-            <small>Control panel</small>
-          </h1>
-          <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Dashboard</li>
-          </ol>
-        </section>
-
-        <!-- Main content -->
-        <section class="content">
-            <!-- 
-            <div class="row">
-                <div class="col-lg-3 col-xs-6">
-                    <div class="small-box bg-green">
-                        <div class="inner">
-                            <h3>53<sup style="font-size: 20px">%</sup></h3>
-                            <p>Bounce Rate</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-android-clipboard"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-xs-6">
-                    <div class="small-box bg-yellow">
-                        <div class="inner">
-                            <h3>44</h3>
-                            <p>User Registrations</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-xs-6">
-                    <div class="small-box bg-red">
-                        <div class="inner">
-                            <h3>65</h3>
-                            <p>Unique Visitors</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-            </div>
-            end Small boxes -->
-
-            <!-- Main row -->
-            <div class="row">
-                <!-- Left col -->
-                <section class="col-lg-7 connectedSortable">
-                    <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#items" data-toggle="tab">Items</a></li>
-                            <li><a href="#sales" data-toggle="tab">Sales</a></li>
-                            <li><a href="#merchants" data-toggle="tab">Merchants</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="active tab-pane" id="items">
-                                <table id="item_table" class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Item</th>
-                                            <th>Stock</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for item in items %}
-                                            <tr>
-                                                <form action="{% url 'sales_add' %}" method="post">
-                                                {% csrf_token %}
-                                                <td>
-                                                    <a href="{% url 'item_view' item_id=item.id %}">
-                                                        {{ item.name }}
-                                                    </a>
-                                                    <input type="hidden" name="item" value="{{ item.id }}">
-                                                </td>
-                                                <td>
-                                                    {{ item.quantity }}
-                                                </td>
-                                                <td>
-                                                    {{ item.price }}
-                                                </td>
-                                                <td>   
-                                                    <input type="number"
-                                                           name="quantity"
-                                                           id="quantityInput"
-                                                           max="{{ item.quantity }}"
-                                                           min="1"
-                                                           value="1"
-                                                           required="true"
-                                                           class="form-control pull-right"
-                                                           placeholder="Quantity of item posited in cube">
-                                                </td>
-                                                <td>
-                                                    <button type="submit" class="btn btn-info btn-flat pull-right">
-                                                        <i class="fa fa-shopping-basket"></i>
-                                                    </button>
-                                                </td>
-                                            </form>
-                                            </tr>
-                                        {% endfor%}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-pane" id="sales">
-                                <table id="sales_table" class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Item</th>
-                                            <th>Date</th>
-                                            <th>Quantity</th>
-                                            <th>Final Sales</th>
-                                            <th>Owner</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for sale in sales %}
-                                            <tr>
-                                                <td>
-                                                    <a href="{% url 'item_view' item_id=sale.item.id %}">
-                                                        {{ sale.item.name }}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    {{ sale.date }}
-                                                </td>
-                                                <td>
-                                                    {{ sale.quantity }}
-                                                </td>
-                                                <td>
-                                                    {{ sale.net }}
-                                                </td>
-                                                <td>
-                                                    {{ sale.item.cube.profile.user.first_name }}
-                                                    {{ sale.item.cube.profile.user.last_name }}
-                                                </td>
-                                            </tr>
-                                        {% endfor%}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-pane" id="merchants">
-                                <table id="merchants_table" class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Username</th>
-                                            <th>Contact Number</th>
-                                            <th>Cubes</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for merchant in merchants %}
-                                            <tr>
-                                                <td>
-                                                    <a href="{% url 'profile_view' user_id=merchant.profile.user.id %}">
-                                                        {{ merchant.profile.user.first_name }}
-                                                        {{ merchant.profile.user.last_name }}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    {{ merchant.profile.user.username }}
-                                                </td>
-                                                <td>
-                                                    {{ merchant.profile.contact_number }}
-                                                </td>
-                                                <td>
-                                                    {{ merchant.cubes|length }}
-                                                </td>
-                                            </tr>
-                                        {% endfor%}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <!-- end Main row -->
-        </section>
-        <!-- end content -->
     </div>
-    <!-- end Content Wrapper -->
-
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>Version</b> 0.1.0
-        </div>
-            <strong>Copyright &copy; 2017.</strong> <p>Template based on:<a href="https://adminlte.io">Almsaeed Studio</a>.</p> All rights
-        reserved.
-    </footer>
-</div>
+    <!-- end Main row -->
 {% endblock %}
 
 {% block pagescripts %}

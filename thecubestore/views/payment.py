@@ -44,7 +44,8 @@ def add(request, user_id):
         print(ex)
 
     context_dict['user_id'] = user_id
-    context_dict['username'] = user.username
+    context_dict['owner'] = '{0} {1}'.format(user.first_name,
+                                             user.last_name)
     return render(request,
                   BASE_URL.format('payment_add.html'),
                   context_dict)
@@ -116,7 +117,7 @@ def delete(request, payment_id):
         messages.error(request, str(ex))
         print(ex)
 
-    return redirect('/thecubestore/profile/view/{0}'.format(user_id))
+    return redirect('/thecubestore/payment/list')
 
 @login_required
 def list(request):

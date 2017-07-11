@@ -4,286 +4,115 @@
 {% block pagetitle %}{{ profile.user.first_name }} {{ profile.user.last_name }}{% endblock %}
 
 {% block main %}
-<div class="wrapper">
-
-    <header class="main-header">
-        <!-- Logo -->
-        <a href="{% url 'home' %}" class="logo">
-            <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini">t<b>CS</b></span>
-            <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg">the<b>CubeStore</b></span>
-        </a>
-        <!-- Header Navbar: style can be found in header.less -->
-        <nav class="navbar navbar-fixed-top">
-            <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                <span class="sr-only">Toggle navigation</span>
-            </a>
-
-            <div class="navbar-custom-menu">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="">{{ user.username }}</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i></a>
-                    </li>
-                </ul>
+<div class="row">
+    <div class="col-md-3">
+        <div class="box box-primary">
+            <div class="box-body box-profile">
+                <img class="profile-user-img img-responsive img-circle"
+                     src="{% static 'images/pic_placeholder.png' %}" alt="User profile picture">
+                <h3 class="profile-username text-center">{{ profile.user.first_name }} {{ profile.user.last_name }}</h3>
+                
+                <p class="text-muted text-center">Merchant</p>
             </div>
-        </nav>
-    </header>
-    <!-- Left side column. contains the logo and sidebar -->
-    <aside class="main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
-        <section class="sidebar">
-            <!-- Sidebar user panel -->
-            <div class="user-panel">
-                <div class="pull-left image">
-                    <img src="{% static "images/logo_mini.png" %}" alt="The Cube Store" class="img-circle">
-                </div>
-                <div class="pull-left info">
-                    <p>{{ user.first_name }} {{ user.last_name }}</p>
-                </div>
-            </div>
-            <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu" data-widget="tree">
-                <li class="header">MAIN NAVIGATION</li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-bell"></i>
-                        <span>Anouncements</span>
-                        <span class="pull-right-container">
-                            <span class="label label-primary pull-right">4</span>
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url 'home' %}">
-                        <i class="fa fa-dashboard"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="active treeview">
-                    <a href="{% url 'merchant_list' %}">
-                        <i class="fa fa-user"></i>
-                        <span>Merchants</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="{% url 'merchant_list' %}"><i class="fa fa-circle-o"></i>List</a></li>
-                        <li><a href="{% url 'user_add' %}"><i class="fa fa-circle-o"></i>Add</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </section>
-    <!-- /.sidebar -->
-    </aside>
-
-    <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <section class="content-header">&nbsp;</section>
-
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>
-                Merchants
-                <small>ADD</small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Merchants</li>
-            </ol>
-        </section>      
-
-        <!-- error messages -->
-        <section class="content">
-            {% if messages %}
-            <div class="row">
-                <ul class="messages">
-                    {% for message in messages %}
-                    <li
-                        {% if message.tags %}
-                            {% if message.tags == 'error' %}
-                                class='text-red'
-                            {% endif %}
-                            {% if message.tags == 'info' %}
-                                class='text-green'
-                            {% endif %}
-                        {% endif %}>
-                        {{ message }}
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-            {% endif %}
-
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="box box-primary">
-                        <div class="box-body box-profile">
-                            <h3 class="profile-username text-center">{{ profile.user.first_name }} {{ profile.user.last_name }}</h3>
-                            
-                            <strong><i class="fa fa-user-circle margin-r-5"></i> Username</strong>
-                            <p class="text-muted">
-                                {{ profile.user.username }}
-                            </p>
-
-                            <strong><i class="fa fa-at margin-r-5"></i> Email</strong>
-                            <p class="text-muted">
-                                {{ profile.user.email }}
-                            </p>
-
-                            <strong><i class="fa fa-birthday-cake margin-r-5"></i> Birthday</strong>
-                            <p class="text-muted">
-                                {{ profile.birthday }}
-                            </p>
-
-                            <strong><i class="fa fa-mobile margin-r-5"></i> Contact Number</strong>
-                            <p class="text-muted">
-                                {{ profile.contact_number }}
-                            </p>
-
-                            <strong><i class="fa fa-map-marker margin-r-5"></i> Primary Address</strong>
-                            <p class="text-muted">
-                                {{ profile.primary_address }}
-                            </p>
-
-                            <strong><i class="fa fa-map-marker margin-r-5"></i> Alternate Address</strong>
-                            <p class="text-muted">
-                                {{ profile.alternate_address }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-9">
-                    <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                            <li><a href="#store" data-toggle="tab">Store</a></li>
-                            <li><a href="#cube" data-toggle="tab">Cube</a></li>
-                            <li><a href="#lease" data-toggle="tab">Lease</a></li>
-                            <li><a href="#payment" data-toggle="tab">Payment</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="store"
-                                {% if not active %}
-                                    class="tab-pane active"
-                                {% else %}
-                                    class="tab-pane"
-                                {% endif %}>
-                                <ul class="list-group list-group-unbordered">
-                                    <li class="list-group-item">
-                                        <span>Number of stores: {{ stores|length }}</span>
-                                        <a href="{% url 'store_add' user_id=profile.user.id %}" class="pull-right">[Add]</a>
-                                    </li>
-                                    {% for store in stores %}
-                                        <li class="list-group-item">
-                                            <b>
-                                                <a href="{% url 'store_view' store_id=store.id %}">
-                                                    {{ store.name }}
-                                                </a>
-                                            </b>
-                                            <a href="{% url 'store_edit' store_id=store.id %}"class="pull-right">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            <div id="cube"
-                                {% if active == 'cube' %}
-                                    class="tab-pane active"
-                                {% else %}
-                                    class="tab-pane"
-                                {% endif %}
-                                >
-                                <ul class="list-group list-group-unbordered">
-                                    <li class="list-group-item">
-                                        <span>Number of cubes: {{ cubes|length }}</span>
-                                        <a href="{% url 'cube_add' user_id=profile.user.id %}" class="pull-right">[Add]</a>
-                                    </li>
-                                    {% for cube in cubes %}
-                                        <li class="list-group-item">
-                                            <b>
-                                                <a href="{% url 'cube_view' cube_id=cube.id %}">
-                                                    {{ cube.unit }}
-                                                </a>                                           
-                                            </b>
-                                            <a href="{% url 'cube_edit' cube_id=cube.id %}" class="pull-right">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            <div id="lease"
-                                {% if active == 'lease' %}
-                                    class="tab-pane active"
-                                {% else %}
-                                    class="tab-pane"
-                                {% endif %}>
-                                <ul class="list-group list-group-unbordered">
-                                    <li class="list-group-item">
-                                        <span>Number of leases: {{ leases|length }}</span>
-                                        <a href="{% url 'lease_add' user_id=profile.user.id %}" class="pull-right">[Add]</a>
-                                    </li>
-                                    {% for lease in leases %}
-                                        <li class="list-group-item">
-                                            <b>
-                                                <a href="{% url 'lease_view' lease_id=lease.id %}">
-                                                    {{ lease.start_date }}-{{ lease.end_date }}
-                                                </a>                                           
-                                            </b>
-                                            <a href="{% url 'lease_edit' lease_id=lease.id %}" class="pull-right">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            <div id="payment"
-                                {% if active == 'payment' %}
-                                    class="tab-pane active"
-                                {% else %}
-                                    class="tab-pane"
-                                {% endif %}>
-                                <ul class="list-group list-group-unbordered">
-                                    <li class="list-group-item">
-                                        <span>Number of payment: {{ payments|length }}</span>
-                                        <a href="{% url 'payment_add' user_id=profile.user.id %}" class="pull-right">[Add]</a>
-                                    </li>
-                                    {% for payment in payments %}
-                                        <li class="list-group-item">
-                                            <b>
-                                                <a href="{% url 'payment_view' payment_id=payment.id %}">
-                                                    {{ payment.bank }} ({{ payment.account }})
-                                                </a>                                           
-                                            </b>
-                                            <a href="{% url 'payment_edit' payment_id=payment.id %}" class="pull-right">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <!-- end Small boxes -->
-        </section>
-        <!-- end content -->
-    </div>
-    <!-- end Content Wrapper -->
-
-    <!-- /.content-wrapper -->
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-            <b>Version</b> 0.1.0
         </div>
-            <strong>Copyright &copy; 2017.</strong> <p>Template based on:<a href="https://adminlte.io">Almsaeed Studio</a>.</p> All rights
-        reserved.
-    </footer>
+
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Info</h3>
+            </div>
+            <div class="box-body">
+                <strong><i class="fa fa-birthday-cake margin-r-5"></i> Birthday</strong>
+                <p class="text-muted">
+                    {{ profile.birthday }}
+                </p>
+
+                <strong><i class="fa fa-mobile margin-r-5"></i> Contact Number</strong>
+                <p class="text-muted">
+                    {{ profile.contact_number }}
+                </p>
+
+                <strong><i class="fa fa-map-marker margin-r-5"></i> Primary Address</strong>
+                <p class="text-muted">
+                    {{ profile.primary_address }}
+                </p>
+
+                <strong><i class="fa fa-map-marker margin-r-5"></i> Alternate Address</strong>
+                <p class="text-muted">
+                    {{ profile.alternate_address }}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#cube" data-toggle="tab">Cube</a></li>
+                <li><a href="#store" data-toggle="tab">Store</a></li>
+                <li><a href="#payment" data-toggle="tab">Payment</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="cube" class="active tab-pane">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <span>Number of cubes: {{ cubes|length }}</span>
+                            <a href="{% url 'cube_add' user_id=profile.user.id %}" class="pull-right">[Add]</a>
+                        </li>
+                        {% for cube in cubes %}
+                            <li class="list-group-item">
+                                <b>
+                                    <a href="{% url 'cube_view' cube_id=cube.id %}">
+                                        {{ cube.unit }}
+                                    </a>                                           
+                                </b>
+                                <a href="{% url 'cube_edit' cube_id=cube.id %}" class="pull-right">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div id="store" class="tab-pane">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <span>Number of stores: {{ stores|length }}</span>
+                            <a href="{% url 'store_add' user_id=profile.user.id %}" class="pull-right">[Add]</a>
+                        </li>
+                        {% for store in stores %}
+                            <li class="list-group-item">
+                                <b>
+                                    <a href="{% url 'store_view' store_id=store.id %}">
+                                        {{ store.name }}
+                                    </a>
+                                </b>
+                                <a href="{% url 'store_edit' store_id=store.id %}"class="pull-right">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div id="payment" class="tab-pane">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <span>Number of payment: {{ payments|length }}</span>
+                            <a href="{% url 'payment_add' user_id=profile.user.id %}" class="pull-right">[Add]</a>
+                        </li>
+                        {% for payment in payments %}
+                            <li class="list-group-item">
+                                <b>
+                                    <a href="{% url 'payment_view' payment_id=payment.id %}">
+                                        {{ payment.bank }} ({{ payment.account }})
+                                    </a>                                           
+                                </b>
+                                <a href="{% url 'payment_edit' payment_id=payment.id %}" class="pull-right">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

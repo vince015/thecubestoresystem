@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.conf.urls import include
-from thecubestore.views import home, user, profile, store, cube, lease, payment, merchant, item, sales
+from thecubestore.views import home, user, profile, store
+from thecubestore.views import cube, payment, item, sales
 
 urlpatterns = [url(r'^login/$', home.user_login, name='login'),
                url(r'^logout/$', home.user_logout, name='logout'),
@@ -10,6 +11,7 @@ urlpatterns = [url(r'^login/$', home.user_login, name='login'),
                # Profile
                url(r'^profile/add/(?P<user_id>[0-9]+)$', profile.add, name='profile_add'),
                url(r'^profile/view/(?P<user_id>[0-9]+)$', profile.view, name='profile_view'),
+               url(r'^profile/list$', profile.list_all, name='profile_list'),
                # Store
                url(r'^store/add/(?P<user_id>[0-9]+)$', store.add, name='store_add'),
                url(r'^store/view/(?P<store_id>[0-9]+)$', store.view, name='store_view'),
@@ -22,12 +24,6 @@ urlpatterns = [url(r'^login/$', home.user_login, name='login'),
                url(r'^cube/edit/(?P<cube_id>[0-9]+)$', cube.edit, name='cube_edit'),
                url(r'^cube/delete/(?P<cube_id>[0-9]+)$', cube.delete, name='cube_delete'),
                url(r'^cube/list$', cube.list, name='cube_list'),
-               # Lease
-               url(r'^lease/add/(?P<user_id>[0-9]+)$', lease.add, name='lease_add'),
-               url(r'^lease/view/(?P<lease_id>[0-9]+)$', lease.view, name='lease_view'),
-               url(r'^lease/edit/(?P<lease_id>[0-9]+)$', lease.edit, name='lease_edit'),
-               url(r'^lease/delete/(?P<lease_id>[0-9]+)$', lease.delete, name='lease_delete'),
-               url(r'^lease/list$', lease.list, name='lease_list'),
                # Payment
                url(r'^payment/add/(?P<user_id>[0-9]+)$', payment.add, name='payment_add'),
                url(r'^payment/view/(?P<payment_id>[0-9]+)$', payment.view, name='payment_view'),
@@ -42,6 +38,4 @@ urlpatterns = [url(r'^login/$', home.user_login, name='login'),
                url(r'^item/list$', item.list, name='item_list'),
                # Sales
                url(r'^sales/add$', sales.add, name='sales_add'),
-               url(r'^sales/list$', sales.list, name='sales_list'),
-               # Mercahnt
-               url(r'^merchant/list$', merchant.list, name='merchant_list'),]
+               url(r'^sales/list$', sales.list, name='sales_list')]
