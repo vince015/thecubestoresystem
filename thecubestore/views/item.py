@@ -126,7 +126,7 @@ def delete(request, item_id):
         messages.error(request, str(ex))
         print(ex)
 
-    return redirect('/thecubestore/item/list/')
+    return redirect('/thecubestore/item/list')
 
 @login_required
 def list(request):
