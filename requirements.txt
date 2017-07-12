@@ -1,12 +1,3 @@
-botocore==1.5.80
 Django==1.10.5
 mysqlclient==1.3.10
-ptyprocess==0.5.1
-pycups==1.9.73
-pygobject==3.22.0
-python-apt==1.1.0b5
-python-dateutil==2.6.1
-python-debian==0.1.29
-pytz==2017.2
-PyYAML==3.12
 urllib3==1.15.1
