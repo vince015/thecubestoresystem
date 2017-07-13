@@ -4,7 +4,6 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-
 from django.conf import settings
 
 from thecubestore.models import Item, Sales, Profile, Cube
@@ -17,7 +16,6 @@ INACTIVE_USER = "User is inactive."
 def user_login(request):
     # Redirection
     next = request.GET.get('next', BASE_URL.format('home'))
-    # context_dict = dict()
 
     if request.method == "POST":
         username = request.POST['username']
@@ -37,8 +35,6 @@ def user_login(request):
             return render(request,
                           'thecubestore/login.html',
                           {'redirect_to': next})
-
-    # context_dict['redirect_to'] = next
 
     return render(request,
                   'thecubestore/login.html',

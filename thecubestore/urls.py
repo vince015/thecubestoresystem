@@ -23,7 +23,7 @@ urlpatterns = [url(r'^login/$', home.user_login, name='login'),
                url(r'^cube/view/(?P<cube_id>[0-9]+)$', cube.view, name='cube_view'),
                url(r'^cube/edit/(?P<cube_id>[0-9]+)$', cube.edit, name='cube_edit'),
                url(r'^cube/delete/(?P<cube_id>[0-9]+)$', cube.delete, name='cube_delete'),
-               url(r'^cube/list$', cube.list, name='cube_list'),
+               url(r'^cube/list$', cube.list_all, name='cube_list'),
                # Payment
                url(r'^payment/add/(?P<user_id>[0-9]+)$', payment.add, name='payment_add'),
                url(r'^payment/view/(?P<payment_id>[0-9]+)$', payment.view, name='payment_view'),
@@ -35,7 +35,7 @@ urlpatterns = [url(r'^login/$', home.user_login, name='login'),
                url(r'^item/view/(?P<item_id>[0-9]+)$', item.view, name='item_view'),
                url(r'^item/edit/(?P<item_id>[0-9]+)$', item.edit, name='item_edit'),
                url(r'^item/delete/(?P<item_id>[0-9]+)$', item.delete, name='item_delete'),
-               url(r'^item/list$', item.list, name='item_list'),
+               url(r'^item/list$', item.list_all, name='item_list'),
                # Sales
                url(r'^sales/add$', sales.add, name='sales_add'),
                url(r'^sales/list$', sales.list, name='sales_list')]

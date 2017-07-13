@@ -1,9 +1,9 @@
-from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 
 from thecubestore.models import Cube, Item
 
@@ -11,6 +11,42 @@ from thecubestore.models import Cube, Item
 BASE_URL = 'thecubestore/{0}/'
 
 @login_required
+def view(request, item_id):
+
+    try:
+        context_dict = dict()
+        item = Item.objects.get(id=item_id)
+        context_dict['item'] = item
+
+    except ObjectDoesNotExist:
+        raise Http404()
+
+    except Exception as ex:
+        messages.error(request, str(ex))
+        print(ex)
+
+    return render(request,
+                  BASE_URL.format('item_view.html'),
+                  context_dict)
+
+@login_required
+def list_all(request):
+
+    try:
+        context_dict = dict()
+        items = Item.objects.all()
+        context_dict['items'] = items
+
+    except Exception as ex:
+        messages.error(request, str(ex))
+        print(ex)
+
+    return render(request,
+                  BASE_URL.format('item_list.html'),
+                  context_dict)
+
+@login_required
+@permission_required('thecubestore.add_item', raise_exception=True)
 def add(request, cube_id):
 
     try:
@@ -18,6 +54,8 @@ def add(request, cube_id):
 
         # Get user object
         cube = Cube.objects.get(id=cube_id)
+        context_dict['cube_id'] = cube_id
+        context_dict['cube'] = cube.unit
 
         if request.method == "POST":
 
@@ -39,39 +77,19 @@ def add(request, cube_id):
             return redirect('/thecubestore/cube/view/{0}#cube-item'.format(cube_id))
 
     except ObjectDoesNotExist:
-        return HttpResponse(status=404)
+        raise Http404()
 
     except Exception as ex:
         raise
         messages.error(request, str(ex))
         print(ex)
 
-    context_dict['cube_id'] = cube_id
-    context_dict['cube'] = cube.unit
     return render(request,
                   BASE_URL.format('item_add.html'),
                   context_dict)
 
 @login_required
-def view(request, item_id):
-
-    try:
-        context_dict = dict()
-        item = Item.objects.get(id=item_id)
-        context_dict['item'] = item
-
-    except ObjectDoesNotExist:
-        return HttpResponse(status=404)
-
-    except Exception as ex:
-        messages.error(request, str(ex))
-        print(ex)
-
-    return render(request,
-                  BASE_URL.format('item_view.html'),
-                  context_dict)
-
-@login_required
+@permission_required('thecubestore.change_item', raise_exception=True)
 def edit(request, item_id):
 
     try:
@@ -89,7 +107,7 @@ def edit(request, item_id):
             sales = float(request.POST.get('sales'))
 
             item.name = request.POST.get('name')
-            item.qunatity = quantity
+            item.quantity = quantity
             item.price = price
             item.vat = vat
             item.commission = sales
@@ -99,7 +117,7 @@ def edit(request, item_id):
             return redirect('/thecubestore/item/view/{0}'.format(item.id))
 
     except ObjectDoesNotExist:
-        return HttpResponse(status=404)
+        raise Http404()
 
     except Exception as ex:
         messages.error(request, str(ex))
@@ -110,6 +128,7 @@ def edit(request, item_id):
                   context_dict)
 
 @login_required
+@permission_required('thecubestore.delete_item', raise_exception=True)
 def delete(request, item_id):
 
     try:
@@ -120,26 +139,10 @@ def delete(request, item_id):
         messages.info(request, 'Successfully deleted item.')
 
     except ObjectDoesNotExist:
-        return HttpResponse(status=404)
+        raise Http404()
 
     except Exception as ex:
         messages.error(request, str(ex))
         print(ex)
 
     return redirect('/thecubestore/item/list')
-
-@login_required
-def list(request):
-
-    try:
-        context_dict = dict()
-        items = Item.objects.all()
-        context_dict['items'] = items
-
-    except Exception as ex:
-        messages.error(request, str(ex))
-        print(ex)
-
-    return render(request,
-                  BASE_URL.format('item_list.html'),
-                  context_dict)

@@ -3,9 +3,10 @@ from datetime import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 
 from thecubestore.models import Profile, Cube, Item
 
@@ -23,6 +24,45 @@ def convert_date(str_time):
         raise
 
 @login_required
+def view(request, cube_id):
+
+    try:
+        context_dict = dict()
+        cube = Cube.objects.get(id=cube_id)
+        context_dict['cube'] = cube
+
+        items = Item.objects.filter(cube=cube)
+        context_dict['items'] = items
+
+    except ObjectDoesNotExist:
+        raise Http404()
+
+    except Exception as ex:
+        messages.error(request, str(ex))
+        print(ex)
+
+    return render(request,
+                  BASE_URL.format('cube_view.html'),
+                  context_dict)
+
+@login_required
+def list_all(request):
+
+    try:
+        context_dict = dict()
+        cubes = Cube.objects.all()
+        context_dict['cubes'] = cubes
+
+    except Exception as ex:
+        messages.error(request, str(ex))
+        print(ex)
+
+    return render(request,
+                  BASE_URL.format('cube_list.html'),
+                  context_dict)
+
+@login_required
+@permission_required('thecubestore.add_cube', raise_exception=True)
 def add(request, user_id):
 
     try:
@@ -56,7 +96,7 @@ def add(request, user_id):
             return redirect('/thecubestore/profile/view/{0}'.format(user_id))
 
     except ObjectDoesNotExist:
-        return HttpResponse(status=404)
+        raise Http404()
 
     except Exception as ex:
         messages.error(request, str(ex))
@@ -69,29 +109,9 @@ def add(request, user_id):
                   BASE_URL.format('cube_add.html'),
                   context_dict)
 
-@login_required
-def view(request, cube_id):
-
-    try:
-        context_dict = dict()
-        cube = Cube.objects.get(id=cube_id)
-        context_dict['cube'] = cube
-
-        items = Item.objects.filter(cube=cube)
-        context_dict['items'] = items
-
-    except ObjectDoesNotExist:
-        return HttpResponse(status=404)
-
-    except Exception as ex:
-        messages.error(request, str(ex))
-        print(ex)
-
-    return render(request,
-                  BASE_URL.format('cube_view.html'),
-                  context_dict)
 
 @login_required
+@permission_required('thecubestore.change_cube', raise_exception=True)
 def edit(request, cube_id):
 
     try:
@@ -124,7 +144,7 @@ def edit(request, cube_id):
             return redirect('/thecubestore/cube/view/{0}'.format(cube.id))
 
     except ObjectDoesNotExist:
-        return HttpResponse(status=404)
+        raise Http404()
 
     except Exception as ex:
         messages.error(request, str(ex))
@@ -135,6 +155,7 @@ def edit(request, cube_id):
                   context_dict)
 
 @login_required
+@permission_required('thecubestore.delete_cube', raise_exception=True)
 def delete(request, cube_id):
 
     try:
@@ -145,26 +166,10 @@ def delete(request, cube_id):
         messages.info(request, 'Successfully deleted cube.')
 
     except ObjectDoesNotExist:
-        return HttpResponse(status=404)
+        raise Http404()
 
     except Exception as ex:
         messages.error(request, str(ex))
         print(ex)
 
     return redirect('/thecubestore/cube/list')
-
-@login_required
-def list(request):
-
-    try:
-        context_dict = dict()
-        cubes = Cube.objects.all()
-        context_dict['cubes'] = cubes
-
-    except Exception as ex:
-        messages.error(request, str(ex))
-        print(ex)
-
-    return render(request,
-                  BASE_URL.format('cube_list.html'),
-                  context_dict)
